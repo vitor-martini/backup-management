@@ -4,68 +4,94 @@ from datetime import datetime
 from PySimpleGUI import PySimpleGUI as sg
 
 def inserir(origem, destino):
-    f = open("arquivos.txt", "r+")
-    f.write(str(len(f.readlines()) + 1) +' | ' + str(origem).replace('\\', '/') +' | ' + str(destino).replace('\\', '/') +'\n')
-    f.close()
+    if origem == '' or destino == '':
+        sg.popup('Verifique as entradas.', title = 'Erro', icon='bkp.ico')
+        return
 
-def excluir(lista_excluir):
-    lista = []
-    for item in lista_excluir:
-        lista.append(int(item[0]))
+    arquivo_backup = open('arquivos.txt', 'r+')
+    arquivo_backup.write(str(len(arquivo_backup.readlines())) +' | ' + str(origem).replace('\\', '/') +' | ' + str(destino).replace('\\', '/') +'\n') # Armazena as entradas no arquivo.
+    arquivo_backup.close()
 
-    f = open("arquivos.txt", "r")
-    lines = f.readlines()
+def excluir(lista):
+    if len(lista) == 0:
+        sg.popup('Selecione algum registro para excluir.', title = 'Erro', icon='bkp.ico')
+        return
 
-    f = open("arquivos.txt", "w")
-    for line in lines:        
-        if int(line.partition("|")[0]) not in lista:
-            f.write(line)
+    # Exclui o cabeçalho
+    if lista[0][0] == 'ID':
+        lista.pop(0)
+
+    # Recebe apenas os ID's
+    lista = [int(item[0]) for item in lista]  
+
+    # Recebe as linhas do arquivo
+    arquivo_backup = open('arquivos.txt', 'r')
+    linhas = arquivo_backup.readlines()
+    arquivo_backup.close()
+
+    # Sobre escreve o arquivo sem as linhas selecionadas
+    arquivo_backup = open('arquivos.txt', 'w')
+    for linha in linhas:        
+        try:
+            if int(linha.split('|')[0]) not in lista:
+                arquivo_backup.write(linha)
+        except:
+            arquivo_backup.write(linha)
         
-    f.close()
+    arquivo_backup.close()
 
 def carregar_lista():
-    f = open("arquivos.txt", "r")
-    list_of_lists = []
-    for line in f:
-        stripped_line = line.strip()
-        line_list = stripped_line.split()
-        list_of_lists.append(line_list)
-    f.close()   
-    return list_of_lists 
+    arquivo_backup = open('arquivos.txt', 'r')    
+    lista = [linha for linha in arquivo_backup]
+    arquivo_backup.close()   
+    return lista 
 
-def backup():    
-    data = datetime.now().strftime("%Y-%m-%d--%H-%M-%S")
-    lista = carregar_lista()
-    for item in lista:
-        if path.exists(item[2]):
-            shutil.make_archive(item[4] + '-' + data, 'zip', item[2])
+def realizar_backup():    
+    data = datetime.now().strftime('%Y-%m-%d--%H-%M-%S')  
+    arquivo_backup = open('arquivos.txt', 'r')
+    i = 0
+    
+    for linha in arquivo_backup:       
+        if i == 0: # Pula a linha de cabeçalho
+            i = 1
         else:
-            sg.popup('O caminho [' + item[2] + '] do item ['+ item[0]+'] é inválido.')
+            id = linha.split('|')[0]
+            arquivo_original = linha.split('|')[1].strip() 
+            arquivo_backup = linha.split('|')[2].strip() + '/backup-' + data
+            if path.exists(arquivo_original):
+                shutil.make_archive(arquivo_backup , 'zip', arquivo_original)
+            else:
+                sg.popup('Operação cancelada. O caminho [' + arquivo_original + '] do item ['+ id +'] é inválido.', title = 'Erro', icon='bkp.ico')
+                return
 
-# Layout
-sg.theme('Reddit')
-layout = [
-    [sg.Text("Diretório de origem:"), sg.Input(key='origem'), sg.FileBrowse()],
-    [sg.Text('Diretório de destino:'), sg.Input(key='destino'), sg.FileBrowse()],
-    [sg.Button('Inserir', key='inserir'), sg.Button('Excluir', key='excluir'), sg.Button('Executar backup', key='backup')],
-    [sg.Listbox(key='lista', values = carregar_lista(),select_mode=sg.LISTBOX_SELECT_MODE_MULTIPLE, size=(70, 10))]
-]
+    sg.popup('Operação realizada com sucesso.', title = 'Sucesso', icon='bkp.ico')
+    
 
-# Janela
-janela = sg.Window('Backup management', layout)
+def interface():
+    # Layout
+    layout = [
+        [sg.Text('Arquivo original:'), sg.Input(key='origem', do_not_clear=False, size=(125,25)), sg.FolderBrowse()],
+        [sg.Text('Arquivo backup:'), sg.Input(key='destino', do_not_clear=False, size=(125,25)), sg.FolderBrowse()],
+        [sg.Button('Inserir', key='inserir'), sg.Button('Excluir', key='excluir'), sg.Button('Executar backup', key='backup')],
+        [sg.Listbox(key='lista', values = carregar_lista(),select_mode=sg.LISTBOX_SELECT_MODE_MULTIPLE, size=(150, 25))]
+    ]
 
-# Ler eventos
-while True:
-    eventos, valores = janela.read()
-    if eventos == sg.WINDOW_CLOSED:
-        break
-    if eventos == 'inserir':
-        inserir(valores['origem'], valores['destino'])
-        janela.find_element('lista').update(values = load_list())
-    if eventos == 'excluir':
-        excluir(janela.find_element('lista').get())
-        janela.find_element('lista').update(values = load_list())
-    if eventos == 'backup':
-        backup()
+    # Janela
+    janela = sg.Window('Backup management', icon='bkp.ico').Layout(layout)
 
+    # Ler eventos
+    while True:
+        eventos, valores = janela.read()
+        if eventos == sg.WINDOW_CLOSED:
+            break
+        if eventos == 'inserir':
+            inserir(valores['origem'], valores['destino'])
+            janela.find_element('lista').update(values = carregar_lista()) # Recarrega grid
+        if eventos == 'excluir':
+            excluir(janela.find_element('lista').get())
+            janela.find_element('lista').update(values = carregar_lista()) # Recarrega grid
+        if eventos == 'backup':
+            realizar_backup()
 
+if (__name__ == "__main__"):
+    interface()
