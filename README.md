@@ -21,6 +21,6 @@ Deve-se informar qual o caminho de origem do arquivo e o destino do backup nos c
 ![image](https://user-images.githubusercontent.com/80294295/162635047-54b2dcc6-6122-4129-82e5-5eab9d202d7c.png)
 
 ## Observações
-- O documento "arquivos.txt" deve estar no mesmo diretório do executável
+- O documento "arquivos.txt" deve estar no mesmo diretório do executável. É nele que ficam armazenados os caminhos informados.
 - O arquivo de backup gerado sempre será no formato "backup-"data"--"hora".zip". 
 - O projeto trabalha com backup de diretórios (pastas) e não de arquivos avulsos.
