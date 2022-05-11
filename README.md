@@ -1,26 +1,26 @@
 # backup-management
-O objetivo desse projeto foi desenvolver uma aplicação que gera backup de vários diretórios de uma única vez. 
+The objective of this project was to develop an application that generates backup of several directories at once.
 
-## Como executar?
-Para executar basta rodar o arquivo backup-management.exe. 
+## How to run it?
+Just run the backup-management.exe file. 
 
-## Como utilizar?
-Deve-se informar qual o caminho de origem do arquivo e o destino do backup nos campos de texto e clicar em "Inserir". Dessa forma será feita uma listagem com os backups informados. Caso seja necessário excluir algum registro, basta seleciona-los na listagem e clicar em "Excluir". Para gerar o backup utiliza-se o botão "Executar backup", fazendo com que sejam gerados os arquivos .zip.
+## How to use it?
+You must inform the source path of the file and the backup destination in the text fields and click on "Insert". In this way, a list will be made with the informed backups. If you need to delete any records, just select them in the list and click "Delete". To generate the backup, use the "Run backup" button, causing the .zip files to be generated.
 
-### Inserir:
+### Insert:
 ![image](https://user-images.githubusercontent.com/80294295/162634915-42bb982f-5648-43ec-a452-48c37540729f.png)
 ![image](https://user-images.githubusercontent.com/80294295/162634935-cf22df49-7eea-45b0-a2a8-04e62eeb064d.png)
 
-### Excluir:
+### Delete:
 ![image](https://user-images.githubusercontent.com/80294295/162634960-d69abf94-fb2a-4de8-90c0-d6e1f2deba69.png)
 ![image](https://user-images.githubusercontent.com/80294295/162634976-bde7197f-4fd1-43e5-b8f5-d4874306b98d.png)
 
-### Executar backup:
+### Run backup:
 ![image](https://user-images.githubusercontent.com/80294295/162635009-a298c225-fcb4-439a-9411-32c3e61e7fc4.png)
 ![image](https://user-images.githubusercontent.com/80294295/162635025-eaa8881a-3f77-4bc6-819d-af07c376b717.png)
 ![image](https://user-images.githubusercontent.com/80294295/162635047-54b2dcc6-6122-4129-82e5-5eab9d202d7c.png)
 
 ## Observações
-- O documento "arquivos.txt" deve estar no mesmo diretório do executável. É nele que ficam armazenados os caminhos informados.
-- O arquivo de backup gerado sempre será no formato "backup-"data"--"hora".zip". 
-- O projeto trabalha com backup de diretórios (pastas) e não de arquivos avulsos.
+- The document "arquivos.txt" must be in the same directory as the executable. This is where the informed paths are stored.
+- The generated backup file will always be in the format "backup-"date"--"time".zip". 
+- The project works with backup of directories (folders) and not single files.
