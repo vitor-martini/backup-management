@@ -20,7 +20,7 @@ You must inform the source path of the file and the backup destination in the te
 ![image](https://user-images.githubusercontent.com/80294295/162635025-eaa8881a-3f77-4bc6-819d-af07c376b717.png)
 ![image](https://user-images.githubusercontent.com/80294295/162635047-54b2dcc6-6122-4129-82e5-5eab9d202d7c.png)
 
-## Observações
+## Remarks
 - The document "arquivos.txt" must be in the same directory as the executable. This is where the informed paths are stored.
 - The generated backup file will always be in the format "backup-"date"--"time".zip". 
 - The project works with backup of directories (folders) and not single files.
